@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
     <style>
         * {
@@ -76,7 +76,7 @@
             }
         }
     </style>
-    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet" />
 </head>
 
 <body class="flex flex-col h-dvh bg-gray-200">
@@ -116,23 +116,28 @@
             class="fixed hidden z-[222] w-full h-dvh bg-gray-900 bg-opacity-75 flex items-center justify-center">
             <div class="bg-white p-8 rounded-md text-center">
                 <p class="mb-4">Incoming Call...</p>
-                <button id="accept-call" class="bg-green-500 text-white py-2 px-4 rounded-md">Accept</button>
-                <button id="reject-call" class="bg-red-500 text-white py-2 px-4 rounded-md ml-2">Reject</button>
+                <button id="accept-call" class="bg-green-500 text-white py-2 px-4 rounded-md">
+                    Accept
+                </button>
+                <button id="reject-call" class="bg-red-500 text-white py-2 px-4 rounded-md ml-2">
+                    Reject
+                </button>
             </div>
         </div>
         <main class="flex-1 p-4 overflow-y-auto relative" id="message-container">
             <div
                 class="text-zinc-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 text-center nobody">
-                bhagwaan kasam koi nahi hai yaha, ruko shaayad koi
-                aajaye.</div>
+                bhagwaan kasam koi nahi hai yaha, ruko shaayad koi aajaye.
+            </div>
         </main>
         <form id="chatform" class="bg-white p-4 flex">
-            <input type="hidden" id="userid" value="">
+            <input type="hidden" id="userid" value="" />
             <input type="text" id="messagebox"
                 class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Type a message">
-            <button type="submit"
-                class="ml-2 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Send</button>
+                placeholder="Type a message" />
+            <button type="submit" class="ml-2 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
+                Send
+            </button>
         </form>
         <video id="local-video" class="hidden" autoplay></video>
         <video id="remote-video" class="hidden" autoplay></video>
@@ -216,6 +221,14 @@
 
             const initialize = async () => {
                 socket.on("signalingMessage", handleSignalingMessage);
+                const videoConstraints = {
+                    video: {
+                        width: { ideal: 1280 }, // HD resolution
+                        height: { ideal: 720 },
+                        frameRate: { ideal: 30 } // 30 fps
+                    },
+                    audio: true // Enable audio
+                };
 
                 try {
                     localStream = await navigator.mediaDevices.getUserMedia({
@@ -288,7 +301,7 @@
                 peerConnection.onconnectionstatechange = () => {
                     console.log("connection state change hui ", peerConnection.connectionState);
                 }
-               
+
             }
 
             //  initialize();
@@ -381,6 +394,63 @@
                     inCall = false;
                 }
             }
+
+
+            document.querySelector("#cameraButton").addEventListener("click", function () {
+                const videoTrack = localStream.getVideoTracks()[0];
+                const cameraButton = document.querySelector("#cameraButton");
+
+                if (videoTrack.enabled) {
+                    videoTrack.enabled = false;
+                    // Update the button to show the camera is off (e.g., gray out the icon or change to a "camera off" icon)
+                    cameraButton.style.backgroundColor = "gray";
+                    cameraButton.innerHTML = `
+              <svg width="21" height="14" viewBox="0 0 21 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.525 2.149C20.365 2.05 20.183 2 20 2C19.847 2 19.694 2.035 19.553 2.105L17 3.382V3C17 1.346 15.654 0 14 0H3C1.346 0 0 1.346 0 3V11C0 12.654 1.346 14 3 14H14C15.654 14 17 12.654 17 11V10.618L19.553 11.894C19.694 11.965 19.847 12 20 12C20.183 12 20.365 11.95 20.525 11.851C20.82 11.668 21 11.347 21 11V3C21 2.653 20.82 2.332 20.525 2.149ZM5 8.5C4.171 8.5 3.5 7.829 3.5 7C3.5 6.171 4.171 5.5 5 5.5C5.829 5.5 6.5 6.171 6.5 7C6.5 7.829 5.829 8.5 5 8.5Z"
+                      fill="red"/>
+              </svg>
+              `;
+                } else {
+                    videoTrack.enabled = true;
+                    // Update the button to show the camera is on (e.g., restore the original color or "camera on" icon)
+                    cameraButton.style.backgroundColor = "#6df966";
+                    cameraButton.innerHTML = `
+              <svg width="21" height="14" viewBox="0 0 21 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.525 2.149C20.365 2.05 20.183 2 20 2C19.847 2 19.694 2.035 19.553 2.105L17 3.382V3C17 1.346 15.654 0 14 0H3C1.346 0 0 1.346 0 3V11C0 12.654 1.346 14 3 14H14C15.654 14 17 12.654 17 11V10.618L19.553 11.894C19.694 11.965 19.847 12 20 12C20.183 12 20.365 11.95 20.525 11.851C20.82 11.668 21 11.347 21 11V3C21 2.653 20.82 2.332 20.525 2.149ZM5 8.5C4.171 8.5 3.5 7.829 3.5 7C3.5 6.171 4.171 5.5 5 5.5C5.829 5.5 6.5 6.171 6.5 7C6.5 7.829 5.829 8.5 5 8.5Z"
+                      fill="white"/>
+              </svg>
+              `;
+                }
+            });
+
+            document.querySelector("#micButton").addEventListener("click", function () {
+                const audioTrack = localStream.getAudioTracks()[0];
+                const micButton = document.querySelector("#micButton");
+
+                if (audioTrack.enabled) {
+                    audioTrack.enabled = false;
+                    // Update the button to show the mic is off (e.g., gray out the icon or change to a "mic off" icon)
+                    micButton.style.backgroundColor = "gray";
+                    micButton.innerHTML = `
+              <svg width="20" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M7 12.5C8.7 12.5 10 11.2 10 9.5V3.5C10 1.8 8.7 0.5 7 0.5C5.3 0.5 4 1.8 4 3.5V9.5C4 11.2 5.3 12.5 7 12.5ZM12.3 9.5C12.3 12.5 9.8 14.6 7 14.6C4.2 14.6 1.7 12.5 1.7 9.5H0C0 12.9 2.7 15.7 6 16.2V19.5H8V16.2C11.3 15.7 14 12.9 14 9.5H12.3Z"
+                      fill="red"/>
+              </svg>
+              `;
+                } else {
+                    audioTrack.enabled = true;
+                    // Update the button to show the mic is on (e.g., restore the original color or "mic on" icon)
+                    micButton.style.backgroundColor = "#6df966";
+                    micButton.innerHTML = `
+              <svg width="20" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M7 12.5C8.7 12.5 10 11.2 10 9.5V3.5C10 1.8 8.7 0.5 7 0.5C5.3 0.5 4 1.8 4 3.5V9.5C4 11.2 5.3 12.5 7 12.5ZM12.3 9.5C12.3 12.5 9.8 14.6 7 14.6C4.2 14.6 1.7 12.5 1.7 9.5H0C0 12.9 2.7 15.7 6 16.2V19.5H8V16.2C11.3 15.7 14 12.9 14 9.5H12.3Z"
+                      fill="white"/>
+              </svg>
+              `;
+                }
+            });
         </script>
 </body>
 
